@@ -4,8 +4,8 @@ version: 0.0
 os: linux
 files:
   - source: /
-    # files.destination -> S3에서 받아온 프로젝트의 위치를 지정해주시면 됩니다.
-    destination: /home/ubuntu/githubActionTest/ # 프로젝트 이름
+    # files.destination -> S3에서 받아온 프로젝트의 위치를 지정해주시면 됩니다. -> EC2의 디렉토리 명 이라고 생각해도 될듯
+    destination: /home/ubuntu/githubActionTest/
     overwrite: yes
 
 permissions:

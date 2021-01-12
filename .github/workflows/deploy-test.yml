@@ -54,7 +54,7 @@ jobs:
         # aws s3 cp -> aws cli 명령어 중 하나입니다. copy 명령어로 현재 위치의 파일을 S3로 업로드하거나, 반대로 S3의 파일을 현재 위치로 다운로드할 수 있습니다.
         # https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-objects
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
-        
+
       - name: Code Deploy
         # application-name -> CodeDeploy 애플리케이션의 이름을 지정합니다.
         # deployment-config-name -> 배포 그룹 설정에서 선택했던 배포 방식을 지정합니다.
