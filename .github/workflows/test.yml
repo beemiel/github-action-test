@@ -19,6 +19,12 @@ name: test-system
 on: 
   workflow_dispatch:
 
+# 현재 스크립트에서 사용할 환경변수를 정의하여 사용할 수 있습니다.
+# 여러 곳에서 공통으로 사용되는 문자열이나, 명확하게 의미를 부여해야 하는 키워드에 사용하시면 됩니다.
+env:
+  S3_BUCKET_NAME: lynn-test-deploy
+  PROJECT_NAME: github-action-test
+
 # job, steps -> workflow 는 하나 혹은 그 이상의 job 을 가질 수 있고 각 job 은 여러 step 에 따라 단계를 나눌 수 있습니다.
 jobs:
   build:
@@ -44,3 +50,27 @@ jobs:
       - name: Build with gradle
         run: ./gradlew build
         shell: bash
+
+      - name: Make build to zip file
+        # $GITHUB_SHA -> Github Actions 에서 제공하는 여러 기본 환경변수 중 하나입니다. 현재 workflow 를 실행시키는 커밋의 해쉬값입니다.
+        # 다른 기본 환경변수들도 필요에 따라 사용할 수 있습니다.
+        # https://docs.github.com/en/free-pro-team@latest/actions/reference/environment-variables#default-environment-variables
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          # ${{ secrets.KEY_이름 }} -> 위의 환경변수와는 비슷하면서도 조금 다른 Context 입니다.
+          # Github Actions 에서 ${{ }} 문법으로 여러 함수나 표현식, 값들을 등록하고 가져와서 사용할 수 있습니다.
+          # 자세한 내용은 Contexts and Expressions - 레퍼런스를 참조해 보세요.
+          # https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+          # secrets 는 저장소에 등록한 비밀 키값을 가져오는 키워드인데요, 아래에서 설명하겠습니다.
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        # aws s3 cp -> aws cli 명령어 중 하나입니다. copy 명령어로 현재 위치의 파일을 S3로 업로드하거나, 반대로 S3의 파일을 현재 위치로 다운로드할 수 있습니다.
+        # https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-objects
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
