@@ -13,3 +13,19 @@ permissions:
     pattern: "**"
     owner: ubuntu
     group: ubuntu
+
+# hooks -> CodeDeploy의 배포에는 각 단계 별 수명 주기가 존재합니다. 수명 주기에 따라 원하는 스크립트를 수행할 수 있습니다.
+# https://docs.aws.amazon.com/ko_kr/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html#reference-appspec-file-structure-hooks-list
+hooks:
+  # ApplicationStart라는 수명 주기에 세 가지 스크립트를 차례로 실행시키겠습니다.
+  ApplicationsStart:
+    # 먼저 새 포트로 어플리케이션을 실행한다. 현재 실행중인 was 서버?는 2개
+    - location: scripts/run_new_was.sh
+      timeout: 180
+      runas: ubuntu
+    - location: scripts/health_check.sh
+      timeout: 180
+      runas: ubuntu
+    - location: scripts/switch.sh
+      timeout: 180
+      runas: ubuntu
