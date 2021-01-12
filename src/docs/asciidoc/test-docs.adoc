@@ -1,7 +1,7 @@
-= ✨요요??✨ API Docs
+= ✨문서수정✨ API Docs
 0.0.1, 2020/08/13
 :toc: left
-:sectnums:
+= :sectnums:
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
