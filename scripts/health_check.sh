@@ -1,7 +1,6 @@
-# health_check.sh
-# 새로 띄운 WAS가 완전히 실행되기까지 health check 하는 스크립트입니다.
+#! /bin/bash
 
-#!/bin/bash
+# 새로 띄운 WAS가 완전히 실행되기까지 health check 하는 스크립트입니다.
 
 # Crawl current connected port of WAS
 CURRENT_PORT=$(cat /home/ubuntu/service_url.inc | grep -Po '[0-9]+' | tail -1)
