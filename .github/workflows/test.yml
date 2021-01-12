@@ -43,7 +43,7 @@ jobs:
         with:
           java-version: 1.8
         
-      - name: Grant excute permissiont ofr gradlew
+      - name: Grant excute permissiont for gradlew
         run: chmod +x gradlew
         shell: bash
         
@@ -74,3 +74,10 @@ jobs:
         # aws s3 cp -> aws cli 명령어 중 하나입니다. copy 명령어로 현재 위치의 파일을 S3로 업로드하거나, 반대로 S3의 파일을 현재 위치로 다운로드할 수 있습니다.
         # https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-objects
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        # application-name -> CodeDeploy 애플리케이션의 이름을 지정합니다.
+        # deployment-config-name -> 배포 그룹 설정에서 선택했던 배포 방식을 지정합니다.
+        # deployment-group-name -> 배포 그룹의 이름입니다.
+        # s3-location -> jar를 S3에서 가지고 오기 위해 차례로 bucket 이름, 파일 타입, 파일 경로를 입력합니다.
+        run: aws deploy create-deployment --application-name test-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name develop --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip

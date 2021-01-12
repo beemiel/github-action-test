@@ -1,0 +1,15 @@
+# appspec.yml은 CodeDeploy Agent가 참조하면서 배포를 진행하는 명세서입니다.
+
+version: 0.0
+os: linux
+files:
+  - source: /
+    # files.destination -> S3에서 받아온 프로젝트의 위치를 지정해주시면 됩니다.
+    destination: /home/ubuntu/githubActionTest/ # 프로젝트 이름
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
