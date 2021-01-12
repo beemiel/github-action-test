@@ -1,8 +1,8 @@
 #! /bin/bash
 
 # service_url.inc 에서 현재 서비스를 하고 있는 WAS의 포트 번호를 읽어옵니다.
-CURRENT_PORT=$(cat /home/ubuntu/service_url.inc | grep -Po '[0-9]+' | tail -1) T
-ARGET_PORT=0
+CURRENT_PORT=$(cat /home/ubuntu/service_url.inc | grep -Po '[0-9]+' | tail -1)
+TARGET_PORT=0
 
 echo "> Current port of running WAS is ${CURRENT_PORT}."
 
